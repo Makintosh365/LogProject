@@ -27,15 +27,18 @@ int main(int argc, char* argv[])
     // -------- аргументы запуска --------
     if (argc >= 2)
     {
-        if (std::string(argv[1]).empty())
+        LogLevel tmp = convertImportance(argv[1]);
+        if (tmp != LogLevel::unknown)
         {
-            std::cerr << "Ошибка: пустое имя файла лога.\n";
-            std::cerr << "Usage: " << argv[0] << " <logfile> [level]\n";
-            return 2;
+            // Пользователь указал только уровень
+            defaultLevel = tmp;
         }
-        filename = argv[1];
+        else
+        {
+            // Пользователь указал имя файла
+            filename = argv[1];
+        }
     }
-
     if (argc >= 3)
     {
         LogLevel tmp = convertImportance(argv[2]);
