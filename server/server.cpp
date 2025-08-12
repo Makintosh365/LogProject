@@ -56,22 +56,33 @@ void runStatsTimer(int timeoutSec, StatsCount &countStat,
 //------------------------------------------------------------------------------
 int main(int argc, char *argv[]) {
   // Параметры запуска. <host> <port> <N> <Tsec>
-  if (argc < 5) {
-    std::cerr << "Usage: " << argv[0] << " <host> <port> <N> <Tsec>\n"
-              << "  port: 1..65535\n"
-              << "  N:    1..1000000000\n"
-              << "  Tsec: 1..86400\n";
-    return 1;
+  std::string host = "127.0.0.1";
+  unsigned port = 12345;
+  unsigned N = 10;
+  unsigned Tsec = 5;
+
+  if (argc >= 5) {
+    bool okHost = true; // host всегда строка, здесь проверку можно опустить
+    bool okPort = parseUint(argv[2], 1, 65535, port);
+    bool okN = parseUint(argv[3], 1, 1000000000u, N);
+    bool okTsec = parseUint(argv[4], 1, 86400u, Tsec);
+
+    if (okHost && okPort && okN && okTsec) {
+      host = argv[1];
+    } else {
+      std::cerr
+          << "Некорректные параметры, используются значения по умолчанию:\n"
+          << host << " " << port << " " << N << " " << Tsec << "\n";
+    }
+  } else {
+    std::cerr
+        << "Недостаточно параметров, используются значения по умолчанию:\n"
+        << host << " " << port << " " << N << " " << Tsec << "\n";
   }
 
-  std::string host = argv[1];
-  unsigned port, N, Tsec;
-
-  if (!parseUint(argv[2], 1, 65535, port) ||
-      !parseUint(argv[3], 1, 1000000000u, N) ||
-      !parseUint(argv[4], 1, 86400u, Tsec)) {
-    return 1;
-  }
+  // --- Здесь твой код работы сервера ---
+  std::cout << "Запуск сервера с параметрами: " << host << " " << port << " "
+            << N << " " << Tsec << "\n";
 
   const int BUFFER_SIZE = 1024;
 
